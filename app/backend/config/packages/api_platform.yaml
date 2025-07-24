@@ -1,0 +1,12 @@
+api_platform:
+    title: 'Rymarov Helper API'
+    version: '1.0.0'
+    mapping:
+        paths:
+            - '%kernel.project_dir%/src/Entity'  # Pokud máš entity ve složce src/Entity
+            - '%kernel.project_dir%/src/Controller'  # Tvoje kontrolery pro API
+    # Ovládání generování Swagger dokumentace
+    swagger:
+        versions: [3]  # Verze Swagger UI, pokud chceš specifikovat verzi
+        # Tato volba je pro přizpůsobení Swagger UI, ne povolení UI
+        swagger_ui_extra_configuration: {}  # Případně přizpůsobení Swagger UI

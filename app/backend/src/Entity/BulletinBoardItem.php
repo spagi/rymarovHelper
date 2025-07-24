@@ -2,12 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\BulletinBoardItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(normalizationContext: ['groups' => ['item:read']]),
+        new Get(normalizationContext: ['groups' => ['item:read']]),
+    ]
+)]
 #[ORM\Entity(repositoryClass: BulletinBoardItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(fields: ["fullTextContent"], flags: ["FULLTEXT"])]
@@ -16,30 +26,38 @@ class BulletinBoardItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['item:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['item:read'])]
     private ?string $iri = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['item:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item:read'])]
     private ?string $department = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item:read'])]
     private ?string $agenda = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $referenceNumber = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['item:read'])]
     private ?\DateTimeImmutable $publishedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['item:read'])]
     private ?\DateTimeImmutable $relevantUntil = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['item:read'])]
     private ?string $detailUrl = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -52,6 +70,7 @@ class BulletinBoardItem
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(targetEntity: BulletinBoardDocument::class, mappedBy: 'item', cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['item:read'])]
     private Collection $documents;
 
     public function __construct()

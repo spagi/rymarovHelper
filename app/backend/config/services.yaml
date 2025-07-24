@@ -1,0 +1,36 @@
+# backend/config/services.yaml
+parameters:
+# Můžete zde mít nějaké parametry
+# ...
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+        # TATO SEKCE JE KLÍČOVÁ A MUSÍ BÝT PŘESNĚ TAKTO
+        bind:
+            # Říkáme: "Kdykoliv nějaká služba potřebuje v konstruktoru argument
+            # typu string s názvem $geminiApiKey, dosaď tam hodnotu ze secretu GEMINI_API_KEY"
+            string $geminiApiKey: '%env(resolve:GEMINI_API_KEY)%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # controllers are imported separately somehow...
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # Přidání explicitní definice pro naši službu, pro jistotu
+    App\Service\GeminiService:
+        # Tímto se ujistíme, že je služba správně zaregistrována.
+        # Díky 'bind' výše by se měl argument $geminiApiKey dosadit automaticky.
+        tags: ['app.gemini_service']
