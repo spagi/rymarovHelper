@@ -6,6 +6,7 @@ namespace App\Service;
 
 use Gemini\Client;
 use Gemini;
+use Gemini\Enums\ModelVariation;
 use Psr\Log\LoggerInterface;
 
 class GeminiService
@@ -49,7 +50,7 @@ PROMPT;
 
         try {
             // Použijeme rychlý a efektivní model Flash
-            $response = $this->client->gemini15Flash()->generateContent($prompt);
+            $response = $this->client->generativeModel(ModelVariation::FLASH)->generateContent($prompt);
 
             return $response->text();
 

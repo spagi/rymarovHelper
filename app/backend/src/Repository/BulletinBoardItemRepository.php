@@ -6,6 +6,7 @@ use App\Entity\BulletinBoardItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * @extends ServiceEntityRepository<BulletinBoardItem>
@@ -62,7 +63,7 @@ class BulletinBoardItemRepository extends ServiceEntityRepository
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $query->setParameter('query', $userQuery);
-        $query->setParameter('limit', $limit, \Types::INTEGER);
+        $query->setParameter('limit', $limit, Types::INTEGER);
 
         return $query->getResult();
     }

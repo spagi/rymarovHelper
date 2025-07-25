@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ORM\Entity(repositoryClass: BulletinBoardItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Index(fields: ["fullTextContent"], flags: ["FULLTEXT"])]
+#[ORM\Index(columns: ['title', 'full_text_content'], name: 'fulltext_idx', flags: ['fulltext'])]
 class BulletinBoardItem
 {
     #[ORM\Id]
