@@ -18,7 +18,7 @@ class ContextBuilderService
         $contextParts = [];
         foreach ($dbResults as $resultRow) {
             /** @var BulletinBoardItem $itemObject */
-            $itemObject = $resultRow[0];
+            $itemObject = $resultRow['entity'];
 
             $title = $this->cleanTextForPrompt($itemObject->getTitle());
             $content = $this->cleanTextForPrompt($itemObject->getFullTextContent());

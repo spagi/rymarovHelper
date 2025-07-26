@@ -84,7 +84,7 @@ export default function CityHelperChat() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-8 flex items-center justify-center">
                 <img
-                    src="/images/logo.jpg" // Cesta k souboru v 'public' adresáři
+                    src="/images/logo.jpeg" // Cesta k souboru v 'public' adresáři
                     alt="Město Rýmařov"
                     className="h-8 w-auto object-contain"
                 />
