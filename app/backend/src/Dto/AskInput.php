@@ -11,7 +11,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 final class AskInput
 {
     #[Groups(['ask:write'])]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Pole "question" nesmí být prázdné.')]
+    #[Assert\Length(min: 5, minMessage: 'Otázka musí mít alespoň {{ limit }} znaků.')]
     #[SerializedName('question')]
     public ?string $question = null;
 }

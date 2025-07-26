@@ -6,19 +6,19 @@ namespace App\Controller\Api;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\OpenApi\Model\Operation;
 use App\Dto\AskInput;
 use App\Dto\AskOutput;
+use App\State\AskProcessor;
 
 
 #[ApiResource]
 #[Post(
     uriTemplate: '/ask',
-    controller: AskController::class,
+    normalizationContext: ['groups' => ['ask:read']],
+    denormalizationContext: ['groups' => ['ask:write']],
     input: AskInput::class,
     output: AskOutput::class,
-    normalizationContext: ['groups' => ['ask:read']],
-    denormalizationContext: ['groups' => ['ask:write']]
+    processor: AskProcessor::class
 )]
 final class AskApiResource
 {

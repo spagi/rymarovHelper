@@ -18,8 +18,9 @@ class GeminiService
     // dosadí hodnota ze Symfony Secrets.
     public function __construct(string $geminiApiKey, LoggerInterface $logger)
     {
-        // Vytvoříme klienta při inicializaci služby
+
         $this->client = Gemini::client($geminiApiKey);
+
         $this->logger = $logger;
     }
 
@@ -32,32 +33,25 @@ class GeminiService
      */
     public function getAnswer(string $question, string $context): string
     {
-        // Sestavení promptu pro AI. Je důležité dát AI jasné instrukce.
-        $prompt = <<<PROMPT
-Jsi přátelský a nápomocný asistent města Rýmařov. Tvojí úlohou je odpovídat na dotazy občanů.
-Odpovídej stručně, jasně, v češtině a formátuj odpověď pomocí Markdownu, pokud je to vhodné (např. odrážky).
-Vycházej POUZE z informací poskytnutých v níže uvedeném KONTEXTU.
-Pokud v kontextu odpověď není, v žádném případě si nic nevymýšlej a odpověz: "Omlouvám se, ale k tomuto tématu nemám v databázi žádné konkrétní informace."
 
----
-KONTEXT:
-{$context}
----
-
-OTÁZKA UŽIVATELE:
-{$question}
-PROMPT;
+        $prompt = 'Jsi přátelský a nápomocný asistent města Rýmařov. Tvojí úlohou je odpovídat na dotazy občanů.'
+            . ' Odpovídej stručně, jasně, v češtině a formátuj odpověď pomocí Markdownu, pokud je to vhodné (např. odrážky).'
+            . ' Vycházej POUZE z informací poskytnutých v níže uvedeném KONTEXTU.'
+            . ' Pokud v kontextu odpověď není, v žádném případě si nic nevymýšlej a odpověz: "Omlouvám se, ale k tomuto tématu nemám v databázi žádné konkrétní informace."'
+            . "\n\n---\nKONTEXT:\n"
+            . $context
+            . "\n\n---\nOTÁZKA UŽIVATELE:\n"
+            . $question;
+        $this->logger->info("Sending prompt to Gemini: " . $prompt);
 
         try {
             // Použijeme rychlý a efektivní model Flash
-            $response = $this->client->generativeModel(ModelVariation::FLASH)->generateContent($prompt);
+            $response = $this->client->generativeModel(model: 'gemini-2.0-flash')->generateContent($prompt);
 
             return $response->text();
 
         } catch (\Exception $e) {
-            $this->logger->error('Gemini API call failed: ' . $e->getMessage());
-
-            return 'Omlouvám se, ale došlo k technické chybě při komunikaci s AI. Zkuste to prosím později.';
+            return "DEBUGGING ERROR: " . get_class($e) . " - " . $e->getMessage();
         }
     }
 }

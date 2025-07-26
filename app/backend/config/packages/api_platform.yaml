@@ -6,8 +6,7 @@ api_platform:
             - '%kernel.project_dir%/src/Entity'
             - '%kernel.project_dir%/src/Controller'
 
-    defaults:
-        normalization_context:
-            groups: ['ask:read']
-        denormalization_context:
-            groups: ['ask:write']
+    formats:
+        jsonld: [ 'application/ld+json' ]
+        json: [ 'application/json' ]
+        html: [ 'text/html' ]

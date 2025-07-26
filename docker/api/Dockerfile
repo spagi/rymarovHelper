@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+     ca-certificates \
     # 'intl' rozšíření potřebuje knihovnu libicu-dev
     libicu-dev \
     sudo \
