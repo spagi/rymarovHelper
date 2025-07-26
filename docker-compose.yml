@@ -30,21 +30,21 @@ services:
       APP_ENV: dev
       CORS_ALLOW_ORIGIN: '${CORS_ALLOW_ORIGIN}'
       JWT_PASSPHRASE: '${JWT_PASSPHRASE}'
-#  frontend:
-#    build:
-#      context: .
-#      dockerfile: ./docker/frontend/Dockerfile
-#    container_name: rymarov_fe
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - ./app/frontend:/app/frontend
-#      - /app/frontend/node_modules
-#    environment:
-#        - API_URL_SERVER=${API_URL_SERVER}
-#        - NEXT_PUBLIC_API_URL_CLIENT=${NEXT_PUBLIC_API_URL_CLIENT}
-#    depends_on:
-#        - api_nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    container_name: rymarov_fe
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app/frontend:/app/frontend
+      - /app/frontend/node_modules
+    environment:
+        - API_URL_SERVER=${API_URL_SERVER}
+        - NEXT_PUBLIC_API_URL_CLIENT=${NEXT_PUBLIC_API_URL_CLIENT}
+    depends_on:
+        - api_nginx
 
   db:
     image: mysql:8.0
