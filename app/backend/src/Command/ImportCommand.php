@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
+use App\Exception\JsonDownloadException;
 use App\Service\OpenDataImporterService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Exception\JsonDownloadException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -39,12 +41,15 @@ class ImportCommand extends Command
         try {
             $this->openDataImporterService->run();
             $io->success('Bulletin board data import completed successfully.');
+
             return Command::SUCCESS;
         } catch (JsonDownloadException $e) {
             $io->error(sprintf('Import failed: %s', $e->getMessage()));
+
             return Command::FAILURE;
         } catch (\Exception $e) {
             $io->error(sprintf('An unexpected error occurred during import: %s', $e->getMessage()));
+
             return Command::FAILURE;
         }
     }

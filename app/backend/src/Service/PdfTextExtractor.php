@@ -25,6 +25,7 @@ class PdfTextExtractor
     public function extractTextFromUrl(string $pdfUrl): ?string
     {
         $tempPdfPath = null;
+
         try {
             $response = $this->httpClient->request('GET', $pdfUrl);
             $pdfContent = $response->getContent();
@@ -42,12 +43,15 @@ class PdfTextExtractor
             return $process->getOutput();
         } catch (HttpExceptionInterface $e) {
             $this->logger->error(sprintf('Failed to download PDF from %s: %s', $pdfUrl, $e->getMessage()));
+
             return null;
         } catch (ProcessFailedException $e) {
             $this->logger->error(sprintf('Failed to extract text from PDF: %s. Error output: %s', $e->getMessage(), $e->getProcess()->getErrorOutput()));
+
             return null;
         } catch (\Exception $e) {
             $this->logger->error(sprintf('An unexpected error occurred during PDF text extraction: %s', $e->getMessage()));
+
             return null;
         } finally {
             if ($tempPdfPath && $this->filesystem->exists($tempPdfPath)) {

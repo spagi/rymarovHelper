@@ -5,9 +5,7 @@ namespace App\Repository;
 use App\Entity\BulletinBoardItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\DBAL\Types\Types;
 
 /**
  * @extends ServiceEntityRepository<BulletinBoardItem>

@@ -10,7 +10,6 @@ use App\Dto\AskInput;
 use App\Dto\AskOutput;
 use App\State\AskProcessor;
 
-
 #[ApiResource]
 #[Post(
     uriTemplate: '/ask',

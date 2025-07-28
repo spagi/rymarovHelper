@@ -12,15 +12,15 @@ class ScrapingDecisionService
      * Rozhodne, zda se má na základě výsledků z databáze spustit web scraper.
      *
      * @param array<int, array{'entity': \App\Entity\BulletinBoardItem, 'relevance': float}> $dbResultsWithScore
-     * @return bool True, pokud se má scrapovat, jinak false.
+     *
+     * @return bool true, pokud se má scrapovat, jinak false
      */
     public function shouldScrapeWeb(array $dbResultsWithScore): bool
     {
-
-        if (empty($dbResultsWithScore)) {
+        if ([] === $dbResultsWithScore) {
             return true;
         }
-        
+
         $topResultRow = $dbResultsWithScore[0];
 
         if ($topResultRow['relevance'] < self::RELEVANCE_THRESHOLD) {

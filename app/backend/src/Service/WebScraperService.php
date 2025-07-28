@@ -14,16 +14,16 @@ class WebScraperService
 
     public function __construct(
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface     $logger
-    )
-    {
+        private readonly LoggerInterface $logger
+    ) {
     }
 
-    public function searchSite(string $query, int $maxResults = 2): ?string // Doporučuji snížit na 2 výsledky
+    public function searchSite(string $query, int $maxResults = 2): ?string
     {
         $links = $this->getSearchResultLinks($query);
         if (empty($links)) {
             $this->logger->info(sprintf('Web scraper found no links for query: "%s"', $query));
+
             return null;
         }
 
@@ -36,7 +36,7 @@ class WebScraperService
             $scrapedContent = $this->scrapeArticleContent($link);
             if ($scrapedContent) {
                 $contentParts[] = $scrapedContent;
-                $count++;
+                ++$count;
             }
         }
 
@@ -58,12 +58,14 @@ class WebScraperService
                 if ($href && !str_starts_with($href, 'http')) {
                     return sprintf('%s%s', self::BASE_URL, $href);
                 }
+
                 return $href;
             });
 
             return array_unique(array_filter($links));
         } catch (\Exception $e) {
-            $this->logger->error('Failed to get search result links: ' . $e->getMessage());
+            $this->logger->error('Failed to get search result links: '.$e->getMessage());
+
             return [];
         }
     }
@@ -77,20 +79,22 @@ class WebScraperService
 
             $contentNode = $crawler->filter('article.news-detail-item .item-page');
 
-            if ($contentNode->count() === 0) {
-
+            if (0 === $contentNode->count()) {
                 $contentNode = $crawler->filter('.page-content');
             }
 
             if ($contentNode->count() > 0) {
                 $text = $contentNode->text(null, true);
+
                 return sprintf("Zdroj: %s\n\n%s", $url, trim($text));
             }
 
             $this->logger->warning(sprintf('Could not find content node for URL: %s', $url));
+
             return null;
         } catch (\Exception $e) {
             $this->logger->error(sprintf('Failed to scrape article content from %s: %s', $url, $e->getMessage()));
+
             return null;
         }
     }

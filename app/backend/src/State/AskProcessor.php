@@ -7,10 +7,10 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Dto\AskInput;
 use App\Dto\AskOutput;
 use App\Repository\BulletinBoardItemRepository;
+use App\Repository\WebPageRepository;
 use App\Service\ContextBuilderService;
 use App\Service\GeminiService;
-use App\Service\ScrapingDecisionService; // <-- Důležitý use
-use App\Service\WebScraperService;
+use App\Service\ScrapingDecisionService;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 
@@ -20,14 +20,17 @@ final class AskProcessor implements ProcessorInterface
         private readonly BulletinBoardItemRepository $itemRepository,
         private readonly GeminiService $geminiService,
         private readonly ContextBuilderService $contextBuilder,
-        private readonly WebScraperService $webScraper,
-        private readonly ScrapingDecisionService $decisionService, // <-- Správná služba
+        private readonly WebPageRepository $webPageRepository,
+        private readonly ScrapingDecisionService $decisionService,
         private readonly LoggerInterface $logger
-    ) {}
+    ) {
+    }
 
     /**
      * @param AskInput $data The input DTO with the user's question
+     *
      * @return AskOutput The output DTO with the AI's answer
+     *
      * @throws Exception
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): AskOutput
@@ -41,18 +44,28 @@ final class AskProcessor implements ProcessorInterface
 
         if ($this->decisionService->shouldScrapeWeb($dbResultsWithScore)) {
             $this->logger->info('Decision service says: Scrape the web...');
-            $webContext = $this->webScraper->searchSite($question, 2);
 
-            if ($webContext) {
+            $webResults = $this->webPageRepository->findRelevantPages($question, 2);
+            $webContext = '';
+            foreach ($webResults as $result) {
+                $webContext .= sprintf(
+                    "Zdroj: %s\n\n%s\n\n",
+                    $result['url'],
+                    $result['content']
+                );
+            }
+
+            if (!empty(trim($webContext))) {
                 $contextString .= sprintf(
                     "\n\n---\nDALŠÍ INFORMACE Z WEBU MĚSTA (www.rymarov.cz):\n%s",
-                    $webContext
+                    trim($webContext)
                 );
             }
         }
 
         if (empty(trim($contextString))) {
             $output->answer = 'Omlouvám se, ale k vašemu dotazu jsem nenašel žádné relevantní informace.';
+
             return $output;
         }
 
