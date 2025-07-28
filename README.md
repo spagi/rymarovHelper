@@ -1,6 +1,23 @@
-# Rymarov Helper
+# Rymarov Helper - AI Assistant
+<img width="823" height="595" alt="image" src="https://github.com/user-attachments/assets/a4325d2d-afe2-47af-b9cb-4a029965a242" />
 
-This project consists of a Symfony (PHP) backend and a Next.js (React) frontend, designed to work together using Docker Compose.
+
+## About The Project
+
+Rymarov Helper is an intelligent AI assistant designed to provide citizens and visitors of Rýmařov with quick and accurate information. The application combines data from official city sources with the power of the Google Gemini language model to answer a wide range of questions.
+
+The core functionality includes:
+-   **Automated Data Indexing:** The system regularly and automatically imports data from the official city bulletin board (`úřední deska`) and crawls the main city website (`rymarov.cz`).
+-   **Intelligent Search:** User questions are analyzed to find the most relevant information from the indexed database.
+-   **AI-Powered Answers:** The collected context is sent to the Gemini AI, which generates a comprehensive, human-readable answer in Czech.
+-   **Modern Architecture:** The project is built with a decoupled frontend and backend, orchestrated by Docker.
+
+### Built With
+
+-   **Backend:** Symfony, API Platform, Doctrine
+-   **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+-   **AI:** Google Gemini
+-   **Infrastructure:** Docker, Nginx, MySQL
 
 ## Project Structure
 
