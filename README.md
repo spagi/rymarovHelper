@@ -68,18 +68,13 @@ docker-compose exec backend php bin/console app:import-bulletin-board
 
 ### 3. Frontend Setup (Next.js)
 
-The frontend should be accessible via Caddy.
+The frontend service builds automatically, including all necessary dependencies. No manual setup is required after starting the containers.
 
-#### Install NPM Dependencies
-
-```bash
-docker-compose exec frontend npm install
-```
 
 ### 4. Access the Application
 
-- **Frontend:** Accessible via Caddy, typically at `http://localhost` (or as configured in your `Caddyfile`).
-- **Backend API:** Accessible via Caddy, typically at `http://localhost/api` (or as configured in your `Caddyfile`).
+- **Frontend:** Accessible at `http://localhost:3000`.
+- **Backend API:** Accessible at `http://localhost:8888`.
 
 ## Development
 
