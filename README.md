@@ -23,7 +23,7 @@ The core functionality includes:
 
 - `backend/`: Symfony application (PHP, Doctrine, API Platform)
 - `frontend/`: Next.js application
-- `Caddyfile`: Caddy web server configuration
+
 - `docker-compose.yml`: Docker Compose configuration for the entire application
 
 ## Getting Started
