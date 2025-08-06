@@ -18,6 +18,8 @@ class OpenDataImporterService
     private BulletinBoardItemRepository $bulletinBoardItemRepository;
     private PdfTextExtractor $pdfTextExtractor;
     private HttpClientInterface $httpClient;
+
+    private VectorService $vectorService;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -25,12 +27,14 @@ class OpenDataImporterService
         BulletinBoardItemRepository $bulletinBoardItemRepository,
         PdfTextExtractor $pdfTextExtractor,
         HttpClientInterface $httpClient,
+        VectorService $vectorService,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->bulletinBoardItemRepository = $bulletinBoardItemRepository;
         $this->pdfTextExtractor = $pdfTextExtractor;
         $this->httpClient = $httpClient;
+        $this->vectorService = $vectorService;
         $this->logger = $logger;
     }
 
@@ -116,6 +120,20 @@ class OpenDataImporterService
                 }
             }
             $bulletinBoardItem->setFullTextContent(trim($fullTextContent));
+            
+            $this->entityManager->flush();
+
+            if ($bulletinBoardItem->getId()) {
+                $this->vectorService->addDocument(
+                    'bulletin_' . $bulletinBoardItem->getId(),
+                    $bulletinBoardItem->getTitle() . "\n\n" . $bulletinBoardItem->getFullTextContent(),
+                    [
+                        'source' => 'bulletin_board',
+                        'url' => $bulletinBoardItem->getDetailUrl(),
+                        'title' => $bulletinBoardItem->getTitle(),
+                    ]
+                );
+            }
         }
 
         $this->entityManager->flush();

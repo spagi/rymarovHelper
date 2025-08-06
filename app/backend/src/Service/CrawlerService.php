@@ -18,6 +18,7 @@ class CrawlerService
         private readonly HttpClientInterface $client,
         private readonly WebPageService $webPageService,
         private readonly WebPageDataFactory $webPageDataFactory,
+        private readonly VectorService $vectorService,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -64,6 +65,17 @@ class CrawlerService
                 $webPageData->url = $url;
 
                 $this->webPageService->createOrUpdate($webPageData);
+
+                // Přidání do Vector DB
+                $this->vectorService->addDocument(
+                    'web_' . md5($url),
+                    $contentData['title'] . "\n\n" . $contentData['content'],
+                    [
+                        'source' => 'website',
+                        'url' => $url,
+                        'title' => $contentData['title'],
+                    ]
+                );
 
                 foreach ($this->extractLinks($crawler, $url, $config->domain) as $newLink) {
                     if (!isset($visited[$newLink])) {
